@@ -294,8 +294,8 @@ io.sockets.on( 'connection', function ( socket ) {
 
     debug( 'A new socket is connected!' );
     connectionsArray.push( socket );
-    //var query = connection.query('SELECT ipbxweb.extensions.extension AS Exten, ipbxweb.users.firstname, ipbxweb.users.lastName, ipbxweb.phones_sips.username as Sip, ipbxweb.extensions.id AS Status, voxipbx.users.pause AS Pause FROM ipbxweb.users LEFT join ipbxweb.extensions on ipbxweb.extensions.functionRelatedID = ipbxweb.users.id LEFT JOIN ipbxweb.phones_sips ON ipbxweb.phones_sips.extensionID = ipbxweb.extensions.id LEFT JOIN voxipbx.users ON voxipbx.users.extension = extensions.extension WHERE ipbxweb.extensions.functionID=1 AND ipbxweb.users.visibleInPhonebook=1 ORDER BY firstName'),
-    var query = connection.query('SELECT ipbxweb.extensions.extension AS Exten, ipbxweb.users.firstname, ipbxweb.users.lastName, ipbxweb.phones_sips.username as Sip, ipbxweb.extensions.id AS Status, voxipbx.phones_login.pause AS Pause FROM ipbxweb.users LEFT join ipbxweb.extensions on ipbxweb.extensions.functionRelatedID = ipbxweb.users.id LEFT JOIN ipbxweb.phones_sips ON ipbxweb.phones_sips.extensionID = ipbxweb.extensions.id LEFT JOIN voxipbx.phones_login ON voxipbx.phones_login.extensionID = ipbxweb.extensions.id WHERE ipbxweb.extensions.functionID=1 AND ipbxweb.users.visibleInPhonebook=1 ORDER BY firstName');
+
+  var query = connection.query('SELECT voxipbx.extensions.extension AS Exten, voxipbx.users.firstname, voxipbx.users.lastName, voxipbx.sipaccount as Sip, voxipbx.extensions.id AS Status ORDER BY firstName');
     users = []; // this array will contain the result of our db query
     query
     .on('error', function(err) {
