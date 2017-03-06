@@ -27,4 +27,4 @@ Request via web: variables user and queue
 user = extension of user/operator
  queue = queue name in asterisk
 
-http://hosted.voxip.nl:8081/?user=201&queue=hfd
+http://switchboard_ip:8081/?user=201&queue=hfd
