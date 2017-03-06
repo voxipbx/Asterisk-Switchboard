@@ -5,6 +5,10 @@ This is a Node-js server side asterisk switchboard.
 
 asterisk configuration:
 <pre>
+exten => 999,1,Answer()
+exten => 999,n,Queue(hfd,wTtKkr,,,6000)
+exten => 999,n,Return()
+
 exten => _opXX_X.,1,NoOp(Sipheader)
 exten => _opXX_X.,n,SET(SWITCHBOARD_EXTENSION=${EXTEN})
 exten => _opXX_X.,n,SIPAddHeader(Call-Info:answer-after=0)
