@@ -24,9 +24,7 @@ exten => _opXX_tra_X.,n,Hangup()
 </pre>
 
 Request via web: variables user and queue
-
-*user = extension of user/operator
-
-*queue = queue name in asterisk
+* user = extension of user/operator
+* queue = queue name in asterisk
 
 http://switchboard_ip:8081/?user=201&queue=hfd
