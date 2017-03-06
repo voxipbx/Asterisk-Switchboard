@@ -1,0 +1,1019 @@
+<html>
+	<head>
+	<!--
+	 * Author:		Jos Rothman
+	 * Contact: 	jos@rothman.nl
+	 * Website:		http://www.voxip.nl/
+	-->
+		<title>VoxIPBX Switchboard</title>
+		<style>
+
+input[type='number'] {
+    -moz-appearance:textfield;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+.context-menu-item{
+    float:left;
+    clear:both;
+    width: 99px;
+}
+li span{
+    float:right;
+}
+body, table{
+text-transform: capitalize;
+margin:0px;
+    font-family:verdana;
+    font-size:11px;
+}
+.SINGLE {
+background-color:#ff0000;
+}
+#topdiv {
+    position: fixed;
+    float: left;
+    width: 100%;
+    height: 146px;
+    top: 0;
+    background-color:#b3e3b3;
+}
+.loggedoff{
+    background-color:#999999 !important;
+}
+.paused{
+    background-color:#b39393 !important;
+}
+#active_debug {
+    background-color:#eeeeee;
+border:3px solid #ff0000;
+position:absolute;
+    right: 0px;
+    top: 150px;
+}
+.queue,
+#active_div,
+#hold_chan {
+    float: left;
+    display: inline-block;
+    width: 33.333%;
+    height: 146px;
+}
+.Sip, .Status, #Extension, #sipaccount {
+    display: none;
+    visibility: hidden;
+}
+td {
+    line-height:13px;
+}
+.status_1{ /*Busy*/
+    background-color:#f9f9f9;
+    color:#000000;
+}
+.status_1{ /*inuse*/
+    background-color:#99ff99;
+    color:#000000;
+}
+.status_2{ /*DND*/
+    background-color:#ff0000;
+    color:#000000;
+}
+.status_4{ /*Unavail*/
+    background-color:#f9f9f9;
+    color:#999999;
+}
+.status_4 > .status_1{ /*Unavail*/
+    background-color:#f9f9f9 !important;
+    color:#999999;
+}
+.status_8{ /*Ringing*/
+    background-color:#ffff00;
+    color:#000000;
+}
+.status_9{ /*InUse&Ringing*/
+    background-color:#ffff00;
+    color:#000000;
+}
+.status_16{ /*Hold*/
+    background-color:#eeeeff;
+    color:#000000;
+}
+.DND {
+    width: 50px
+}
+.Lastname {
+    width: 150px
+}
+.Firstname {
+    width: 100px
+}
+.Exten {
+    width: 60px
+}
+#excelDataTable{
+    margin-top:144px;
+    width: 100%;
+}
+.status_17{ /*InUse&Hold*/
+    background-color:#ffccff;
+}
+.transfer_chan li,
+.active_chan li{
+   margin: 8px;
+}
+.transfer_chan{
+    background: #eeeeee !important;
+}
+.transfer_chan{
+border:1px solid #b3b3b3;
+}
+.active_chan{
+border:1px solid #ff0000;
+}
+.transfer_chan,
+.active_chan{
+width:48%;
+    padding: 0px 0px !important;
+    margin: 1px -1px 1px -3px !important;
+    list-style-type: none;
+    text-align: left;
+    vertical-align: middle;
+    border-radius: 6px;
+    background: #ffffff;
+    font: normal 13px verdana;
+    color: #111111;
+    text-decoration: none;
+    height:58px;
+}
+.active_chan{
+    float: right;
+}
+.transfer_chan{
+    float: left;
+}
+#direct{
+display: none;
+}
+.transfer_chan:before,
+.active_chan:before{
+    height: 24px;
+    width: 24px;
+    line-height: 13px;
+    margin: 0 4px -6px 4px;
+}
+.queue li,
+#direct li,
+#hold_chan li {
+    list-style-type: none;
+    text-align: left;
+    vertical-align: middle;
+    padding: 1px 5px;
+    margin:0 1px;
+    border: 1px solid #d3d3d3;
+    border-radius: 6px;
+    background: #ffffff;
+    font: normal normal bold 15px verdana;
+    color: #111111;
+    text-decoration: none;
+}
+time{
+position: absolute;
+left:1px;
+top:132px;
+}
+#transfer_time,
+#active_time{
+position: relative;
+top:-1px;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    background-color: #ffdddd;
+    text-align:center;
+    line-height:13px;
+    font-size:13px;
+}
+.queue li:before{
+    content:  "\0000a0";
+    display: inline-block;
+    height: 24px;
+    width: 24px;
+    line-height: 20px;
+    margin: 0 4px -6px 4px;
+    position: relative;
+    top: 0px;
+    left: 0px;
+}
+#direct li:before{
+    content:  "\0000a0";
+    display: inline-block;
+    height: 24px;
+    width: 24px;
+    line-height: 24px;
+    margin: 0 4px -6px 4px;
+    position: relative;
+    top: 0px;
+    left: 0px;
+}
+#hold_chan li:before{
+    content:  "\0000a0";
+    display: inline-block;
+    height: 16px;
+    width: 16px;
+    line-height: 24px;
+    margin: 4px 4px -6px 4px;
+    position: relative;
+    top: 0px;
+    left: 0px;
+    background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAADo0lEQVRIiZ3VXYhVZRQG4GedGUQmGwaRQfdsQszKTKLsBzODEgqh/+z/rhKsC5MoCIOICImQLspEyIqKTOwisp+Loosy8yKmkoKSEhFmz1GGihgOImazutjn5FFPCr2wbxbft95vrfdda4czoCyLJViKC3EOGjiEA/gq087x8eaR/7ofvYIjI8X0CHfjcSxAPyaTZnAERTI7OIYJbBbxajU2PnFGgrIsFuFFXItDydvBR9ifHA2mMA3DyfLgAVyCfXhSxMfV2PhUT4KynHMDsQmz8UqmTRGGkhXBVSgzDURoYhSfYi9uwtMYwnPCy9VY89gJBGVZLM60PcJ0PJaZoyLW4v5guHMuuy6lbIX4As+otdmIhVhbVc03/yUoy2IIO8iLiYeSvcHrWNJLox5o4hG18FvJIeLWqmp+1yF4AuuT9SHfJd5SO6eDN9RidtDA+e0zneomcA8GsA1fRFgZIyPFjAjf43ByM9YFD3c/L7livGqOdsdGRopGhMV15Yp2+BvchWdxN65rRFim9ve2YFZwx8n1d3pelsX8sizWl2WxqtGI/qomfUntLLicvAFb1E67vYFr1D7/GCu6Su6FuXgKL2TmgnZsD452te6+rC37C5Y3sAj7yYnk6nZLZGZ3izqYwpGkwh/t2Mz2Azv1ziUH8EOysD8ZCCaJY1H7v25JHB+RrmHZjXMj4lBnmJL74gQC04mBZDKY0d9zV5wW2S+VZTlnGKtxy8knIkJOJW3mw5iXmf0RcQCLT5N9KfFJO01DLeSJ9LRkTkaYiVZDLdJcESW+PsPzG5je/k5JDsG+qEVfhB8a+FK9xFbiM/VU/l8cxVZcjPn4vCFyl9pSd6qH7e087usOto2MzPmR3HI8lE5Gpp3YmbU2h7G9b3Ky9ffg4NlTuBd9wcaoF9b8rrszI2KYGDoeOsUe+8jVES4N8QQ+EF7rg8HBGT8Tl6mneB82kvOI83pl6oGfkgcjYhqxEa3MXDVeHfy9DyYnW38NDp79La5X75IxYgN+Sy4IzkoaPZgmhG14NJiFTep/wprx8YO7T6mzLIsrsVndovewIVMrwtLkspDzU0wLqkzfYleEP7AKa9QiryPfqaqDUz0bWZbFOcnzwW04munDCDswmrTal6ZhQXJj1OYosEd4rBpr7u7O17O/ZVn0Y1mmteSKiOhXD+WE+kc/jEb7H/2TeqO+X1XN1sm5zihgWRZFZi6LcBHR2ft/4lfsrKrm3tPd/wce9jkGMUdL+QAAAABJRU5ErkJggg==") no-repeat left center transparent;
+    background-size: 100% 100%;
+}
+.queue li:before{
+    content:  "\0000a0";
+    display: inline-block;
+    height: 16px;
+    width: 16px;
+    line-height: 24px;
+    margin: 4px 4px -6px 4px;
+    position: relative;
+    top: 0px;
+    left: 0px;
+    background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAABk0lEQVRIibXVv0tWURgH8I9XEREneRFpkJcIcRKRanAKapCmJodocGqUBgl0ECQiotbGJpFwsynKKRwcwqX+gKAhKUFp0Ch9fR3OES63+94fml+4cDnn+3y/z/OcX92qYwIzaOF7jbjKeIQ2FusEJZeRSZFBgv4LaP2TcHZgEWvoOYfBMp4UEa7gQOjz85z5ojW4Lyz+b1wtMnkQia34n0YT0zkCUzGxFh4WiZ9hKWZ6gMkSbhM7kf+iijih/2/wVWhbFYN3aq5bP8Yqcq+jUUf8v6K7BrdPqKwLx1WDugrmGriH28I91BD6fIw9fMYG1vGzRqKu4bWwp9sVvj9YwWhZBT14jAUMxLE9fMAnfMOh0KombuAWhiP3EC/xFH+zRoN4n5PdzZJqB/ArE/NRZlcNYbtD+WUHrQ/7OXFfpM7QZgfxixi0hbb2JooP1EmJQRFnUlgrd4WdkM3gLXorGDzDUU78Upo0J9yG7UieV++1u4MfKfHVbHyCV1F8toZwGuPYxZYOr2KCkXOKn2Gok/il4RR7k3aQhR9CWQAAAABJRU5ErkJggg==") no-repeat left center transparent;
+    background-size: 100% 100%;
+}
+
+.dialer {
+width:100%;
+    text-align: center;
+    line-height: 16px;
+    vertical-align: middle;
+    padding: 8px 24px;
+    margin:2px 0;
+    border-radius: 8px;
+    border: 1px solid #4682af;
+    border-radius: 8px;
+    background: #36a3d1;
+    background: -webkit-gradient(linear, left top, left bottom, from(#36a3d1), to(#9ec5e3));
+    background: -moz-linear-gradient(top, #36a3d1, #9ec5e3);
+    background: linear-gradient(to bottom, #36a3d1, #9ec5e3);
+    text-shadow: #325d7d 1px 1px 1px;
+    font: normal normal bold 20px verdana;
+    color: #ffffff;
+    text-decoration: none;
+}
+.button {
+width:40%;
+    text-align: center;
+    vertical-align: middle;
+    padding: 8px 24px;
+    border-radius: 8px;
+    border: 1px solid #215900;
+    background: #3ea800;
+    background: -webkit-gradient(linear, left top, left bottom, from(#3ea800), to(#215900));
+    background: -moz-linear-gradient(top, #3ea800, #215900);
+    background: linear-gradient(to bottom, #3ea800, #215900);
+    text-shadow: #143500 1px 1px 1px;
+    font: normal normal bold 20px verdana;
+    color: #ffffff;
+    text-decoration: none;
+}
+.button:before{
+    content:  "\0000a0";
+    display: inline-block;
+    line-height: 24px;
+    position: relative;
+    top: 0px;
+    left: -6px;
+}
+.buttons{
+display:block-inline;
+}
+#dial_button {
+    float: left;
+    width:38%;
+    margin-right:-15px
+    border: 1px solid #215900;
+    background: #3ea800;
+    background: -webkit-gradient(linear, left top, left bottom, from(#3ea800), to(#215900));
+    background: -moz-linear-gradient(top, #3ea800, #215900);
+    background: linear-gradient(to bottom, #3ea800, #215900);
+}
+#dial_button:before{
+    height: 24px;
+    width: 24px;
+    margin: 0 4px -6px -4px;
+    background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAABqUlEQVRIS63VTYiOURTA8d9IhCVCU3ZI2Yud2BJTJmVFETvZ2BCysbbBAgsLM2ZKzFIW2FhgMQtESvKxU+Qzn506Mz29no/Xe93NW89zz///nuece+4QrmKnv9dLbMTrmnd9PxrCL8Rv3QrxZN+0mo0B/or5DZC9uFQqeIMVDZATOFkquIf1DZBrGCkVXMSeBsg7LMOPQSVRgwM42wJYjWclgjV40gC4jc34WSKILB4jRNV1EzvwaVB4xM30/1GcqoCmMJotXMKfFUSbvsA8fMByfCkiZ3D1BJ/H/nx+EOf+t2AYT7EQ77EOr0olvTPoCE4n9G520PcSSa9gLu5gQ0IvYB9+Dyqpm6Ir8QBLEnoGh1okc/K0v637E01jOjK4hQUZdDkz+dYDia4bx3Y8zJjpvEM+4lGTIDhbcKMiuY9deJ6SgE9gW8vnm24TRFxkch1LE/IZxxAtfQVbu2rTJYj4qMlYpfDxLMbHoi54dVR07Y3uOozjeU669s++7yeDKiwOY3yiuD+iBp3rXwUzwJhdcV/vxto2y6CCKnMVNuW1G7Ko2eLMcOwPsP5Dlc3Ckf4AAAAASUVORK5CYII=") no-repeat center center transparent;
+    background-size: 100% 100%;
+}
+#cancel_button {
+    float: right;
+    width:38%;
+    margin-left:-15px
+    border: 1px solid #592100;
+    background: #a83e00;
+    background: -webkit-gradient(linear, left top, left bottom, from(#a83e00), to(#592100));
+    background: -moz-linear-gradient(top, #a83e00, #592100);
+    background: linear-gradient(to bottom, #a83e00, #592100);
+}
+#cancel_button:before{
+    height: 22px;
+    width: 48px;
+    margin: 1px 4px -5px -4px;
+    background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAWCAYAAACG9x+sAAACKklEQVRYR+3Xy6tOYRQG8N9BLpGUMlJmRC4DJANKQmKAgcSfQJHkkijCxECJmZEZJoooE4aSS4mcMCCU3EJ0BoSW3n36znf29+3L2adjYNXXd3vW8z7Pfvda79o9hjdGJfpfw7VMzxCJQ+BsLMF8zMQMTMMUjEn8P/EZ7/AST/EQt9GL2gbrGJiEddiAVZg6xIvwATdwGdfwvQpfFQMLsR2bMbHKIhWwIf4CzuJ+mbwyBlbiMJaXIWwQcwtHEO8do5uBOTiF1QWivuEO7uERnuENPqIv5U5It9r0VCfzsDi9xhfwX8fuVCuDoHkGxuIQ9rcUYd4aL9Lt9ABRpHViHJbiZkHyD5zAccTn/mg3MCvdgwtKqIkrvqgErgzkdxlQ2uUteJ7hWw1sxHlElykTI2EgdH3FNlyNL5mBPThZRnULZqQMhITYsV04HQYO4lhF8QEfSQOZ3H1hIDpFUSfI8/cvGOgLA68Q7a1q3E1tsGpeHr5sEbfn9oaBGAkuFbTMvEWjZvY2oR5XsL4i13usyIp4U2qf2fDVjStml6iZOO7r9v92/hhNjmIH4hwqir/i8bi1jRaZiG0+kw65L0Ur1Pw/ptlzWNYlv198axvN8J1MvMXWEidmTd0D0kanKSB2JHueyAADxOcZiN/aTcR8sxavm1BXgWMNLmJyyhkkvpOB+D0EH0gPHzvxqcLCTULnpgM2HnjisH3STl5mnG5SUONc/w00fkkrEv4Bu5RnhZVZVdMAAAAASUVORK5CYII=")  no-repeat center center transparent;
+    background-size: 100% 100%;
+}
+
+
+
+.transfer-icon {
+    background-image: url(voxip/images/transfer.png);
+    background-position: 2px 2px;
+    background-repeat: no-repeat;
+}
+.dial-icon {
+    background-image: url(voxip/images/dial.png);
+    background-position: 2px 2px;
+    background-repeat: no-repeat;
+}
+		</style>
+            <link rel="stylesheet" href="voxip/jquery.contextMenu.css" type="text/css" media="screen">
+
+	</head>
+	<body>
+<div id="topdiv">
+    <div id="extension"></div>
+    <div id="sipaccount"></div>
+    <div class='queue' id="queue"></div>
+    <div id="active_div">
+        <div id="direct"><li></li></div>
+        <div class="active_chan"><div id="active_chan"></div><div id="active_time"></div></div>
+        <div class="transfer_chan"><div id="transfer_chan"><li></li></div><div id="transfer_time"></div></div>
+    <div class="buttons">
+        <input class="dialer" id=dial pattern="[0-9]{13}" onkeyup="if (/\D/g.test(this.value)) this.value = this.value.replace(/\D/g,'')" type=number></input>
+        <div class="button" id="dial_button"></div>
+        <div class="button" id="cancel_button"></div>
+</div>
+    </div>
+    <div class="test"></div>
+    <div id="hold_chan">
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </div>
+    <time class=time></time>
+</div>
+    <div id="active_debug">
+    </div>
+
+<table id="excelDataTable" borddiver="0">
+</table>
+    <script src="voxip/jquery-latest.min.js"></script>
+    <script src="voxip/jquery.contextMenu.js"></script>
+    <script src="socket.io/socket.io.js"></script>
+    <script>
+    var socket = io.connect(':8081');
+function epoch2time(time) {
+        var time_var = new Date(Math.floor(time*1000));
+        var h = time_var.getHours(),
+                m = time_var.getMinutes(),
+                s = time_var.getSeconds(),
+                r = "";
+            if (h > 0) {
+                r += (h > 9 ? h.toString() : "0" + h.toString()) + ":";
+            }
+            r += (m > 9 ? m.toString() : "0" + m.toString()) + ":"
+            r += (s > 9 ? s.toString() : "0" + s.toString());
+            //console.log(r);
+        return (r);
+
+}
+function update_active_time() {
+        var timenow = Math.floor(Date.now()) /1000;
+        var tn = new Date();
+        var h = tn.getHours(),
+                m = tn.getMinutes(),
+                s = tn.getSeconds(),
+                r = "";
+            if (h > 0) {
+                r += (h > 9 ? h.toString() : "0" + h.toString()) + ":";
+            }
+            r += (m > 9 ? m.toString() : "0" + m.toString()) + ":"
+            r += (s > 9 ? s.toString() : "0" + s.toString());
+    $("time").html(r);
+    if ($("#transfer_chan li").html() != ""){
+        //var starttime = new Date(Math.floor($("#active_chan").children().eq(0).attr('id')));
+        var starttime = Math.floor($("#transfer_chan li").attr('time'));
+        var nowtime = Math.floor(Date.now()) /1000
+        var elapsed = nowtime - starttime; // time in
+        //var difference = new Date(elapsed);
+        var dt = new Date("01/01/2000 0:00");
+            dt.setSeconds(elapsed);
+        var h = dt.getHours(),
+                m = dt.getMinutes(),
+                s = dt.getSeconds(),
+                r = "";
+            if (h > 0) {
+                r += (h > 9 ? h.toString() : "0" + h.toString()) + ":";
+            }
+            r += (m > 9 ? m.toString() : "0" + m.toString()) + ":"
+            r += (s > 9 ? s.toString() : "0" + s.toString());
+        $("#transfer_time").html(r);
+    }else{
+        $("#transfer_time").html('');
+    }
+    if ($("#hold_chan").children().length > 0){
+        $("#hold_chan").find('li').each(function(){
+            var starttime = Math.floor($(this).attr('time'));
+            var nowtime = Math.floor(Date.now()) /1000
+            var elapsed = nowtime - starttime; // time in
+            //var difference = new Date(elapsed);
+            var dt = new Date("01/01/2000 0:00");
+                dt.setSeconds(elapsed);
+            var h = dt.getHours(),
+                    m = dt.getMinutes(),
+                    s = dt.getSeconds(),
+                    r = "";
+                if (h > 0) {
+                    r += (h > 9 ? h.toString() : "0" + h.toString()) + ":";
+                }
+                r += (m > 9 ? m.toString() : "0" + m.toString()) + ":"
+                r += (s > 9 ? s.toString() : "0" + s.toString());
+            $(this).find('span').html(r);
+        })
+    }
+    if ($(".queue").children().length > 0){
+        $(".queue").find('li').each(function(){
+            var starttime = Math.floor($(this).attr('time'));
+            var nowtime = Math.floor(Date.now()) /1000
+            var elapsed = nowtime - starttime; // time in
+            //var difference = new Date(elapsed);
+            var dt = new Date("01/01/2000 0:00");
+                dt.setSeconds(elapsed);
+            var h = dt.getHours(),
+                    m = dt.getMinutes(),
+                    s = dt.getSeconds(),
+                    r = "";
+                if (h > 0) {
+                    r += (h > 9 ? h.toString() : "0" + h.toString()) + ":";
+                }
+                r += (m > 9 ? m.toString() : "0" + m.toString()) + ":"
+                r += (s > 9 ? s.toString() : "0" + s.toString());
+            $(this).find('span').html(r);
+        })
+    }
+    if ($("#active_chan").children().length > 0){
+        //var starttime = new Date(Math.floor($("#active_chan").children().eq(0).attr('id')));
+        var starttime = Math.floor($("#active_chan li").attr('time'));
+        var nowtime = Math.floor(Date.now()) /1000
+        var elapsed = nowtime - starttime; // time in
+        //var difference = new Date(elapsed);
+        var dt = new Date("01/01/2000 0:00");
+            dt.setSeconds(elapsed);
+        var h = dt.getHours(),
+                m = dt.getMinutes(),
+                s = dt.getSeconds(),
+                r = "";
+            if (h > 0) {
+                r += (h > 9 ? h.toString() : "0" + h.toString()) + ":";
+            }
+            r += (m > 9 ? m.toString() : "0" + m.toString()) + ":"
+            r += (s > 9 ? s.toString() : "0" + s.toString());
+        $("#active_time").html(r);
+    }
+
+var request = $.ajax({
+            method: "GET",
+            dataType: 'json',
+            url: "http://10.106.88.241/admin/apps/getactivechannels.php",
+            cache: false,
+            success: function(data) {
+                    $("#active_debug").html('<li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>');
+                for (var i=0;i<data.length;++i)
+                {
+                    //$('#active_debug').html('<li>'+data[i].caller.number+'</li>');
+                //$( "#active_debug li[accountcode='"+data[i].accountcode+"']" ).attr("connected", data[i].name).attr("con_name", data[i].connected.name).attr("con_number", data[i].connected.number);
+var found=0;
+    $( "#active_debug li").each(function(){
+if ($(this).attr('accountcode') == data[i].accountcode){
+found=1;
+$(this).removeClass("SINGLE");
+}
+});
+if (found==0){
+                $("#active_debug li:empty:first").html(data[i].caller.number + " -> [" + data[i].connected.number + "] " + data[i].connected.name).attr("name" ,data[i].name).attr("id" ,data[i].id).attr("accountcode", data[i].accountcode).attr("time" ,data[i].creationtime).click(function (){
+        socket.emit('client_data', {letter: '31.PickupHold.' + $(this).attr("name") + '.' + $("#extension").html() });
+    }).addClass("SINGLE");
+}
+                //#$("[" + data.notification.CallerIDNum.replace(/</g,'').replace(/>/g,'') + "]<span></span>").attr("name" ,data.notification.Channel).attr("id" ,uniqueID).attr("time" ,data.notification.AccountCode);
+                }
+            }
+        });
+}
+$(document).ready(function(e) {
+        var socket = io.connect(':8081');
+        var url = location.search.split('user=')[1]
+        var ext = url.split('&')[0]
+        var queue = url.split('queue=')[1]
+        setInterval("update_active_time()", 1000)
+        $("#extension").html(ext);
+$(".queue").attr("id","queue_"+ queue);
+        //$(".queue").html(queue);
+        //$("#extension").html(location.search.split('user=')[1]);
+        $("#dial").focus();
+$(function(){
+    $("#excelDataTable").contextMenu({
+        selector: 'tr:not(.status_4) td:not(.status_1,.status_2,.status_3,.status_4,.status_5,.status_6,.status_7,.status_8,.status_9,.status_16,.status_17)',
+        trigger: 'left',
+        autoHide: true,
+        build: function($trigger, e) {
+            // this callback is executed every time the menu is to be shown
+            // its results are destroyed every time the menu is hidden
+            // e is the original contextmenu event, containing e.pageX and e.pageY (amongst other data)
+            return {
+                callback: function(key, options) {
+                    //var m = "clicked: " + key + " on " + $(this).closest('tr').attr('id');
+                    if (key == 'Dial'){
+                        socket.emit('client_data', {letter: '13.Dial.' + $(this).closest("tr").attr("id") + '.' + $("#sipaccount").html() });
+                    }
+                    if (key == 'Transfer'){
+                        socket.emit('client_data', {letter: '13.Transfer.' + $(this).closest("tr").attr("id") + '.' + $("#sipaccount").html() });
+                    }
+                return true;
+                },
+                items: {
+                    "Dial": {name: "Bel", icon: function($element, key, item){ return 'dial-icon'; }},
+                    "Transfer": {name: "Transfer", icon: function($element, key, item){ return 'transfer-icon'; }},
+                    //"quit": {name: "Quit", icon: function($element, key, item){ return 'quit-icon'; }}
+                }
+            };
+        }
+    });
+});
+
+    socket.on('eventBridges', function (data) {
+        if ($('#sipaccount').html()!=""){
+            $("#active_chan").html("");
+            $("#active_time").html("");
+            var active_call = false;
+            //$("#direct").html("<li></li>");
+            //$("#hold_chan").html("");
+            //$(".Active").html("");
+            for ( bridges in data.notification ) {
+                if (Object.keys(data.notification[bridges]).length > 1){
+                    if ($("#direct").children().eq(0).attr('name') == data.notification[bridges]._1.Channel || $("#direct").children().eq(0).attr('name') == data.notification[bridges]._2.Channel){
+                        $("#direct").html("<li></li>");
+                    }
+                    if (data.notification[bridges]._1.Channel.indexOf($('#sipaccount').html()) > -1){
+                        if (data.notification[bridges]._2.ChannelState == 6){
+                        //console.log(data.notification[bridges]._2.Channel);
+                                $("#active_chan").html($("<li>" + data.notification[bridges]._2.CallerIDName.replace(/</g,'').replace(/>/g,'') + "<br>[" + data.notification[bridges]._2.CallerIDNum.replace(/</g,'').replace(/>/g,'') + "]</li>").attr("name" ,data.notification[bridges]._2.Channel).attr("id" ,data.notification[bridges]._2.Uniqueid).attr("time" ,data.notification[bridges]._2.AccountCode).attr("extrachannel" ,data.notification[bridges]._1.Channel));
+                                active_call = true;
+                        }
+                    }else if (data.notification[bridges]._2.Channel.indexOf($('#sipaccount').html()) > -1){
+                        if (data.notification[bridges]._1.ChannelState == 6){
+                        //console.log(data.notification[bridges]._1.Channel);
+                                $("#active_chan").html($("<li>" + data.notification[bridges]._1.CallerIDName.replace(/</g,'').replace(/>/g,'') + "<br>[" + data.notification[bridges]._1.CallerIDNum.replace(/</g,'').replace(/>/g,'') + "]</li>").attr("name" ,data.notification[bridges]._1.Channel).attr("id" ,data.notification[bridges]._1.Uniqueid).attr("time" ,data.notification[bridges]._1.AccountCode).attr("extrachannel" ,data.notification[bridges]._2.Channel));
+                                active_call = true;
+                        }
+                    }else if (data.notification[bridges]._1.Channel.indexOf('Local/' + $('#extension').html()) > -1){
+                        if (data.notification[bridges]._2.ChannelState == 6){
+                        //console.log(data.notification[bridges]._2.Channel);
+                                $("#active_chan").html($("<li>" + data.notification[bridges]._2.CallerIDName.replace(/</g,'').replace(/>/g,'') + "<br>[" + data.notification[bridges]._2.CallerIDNum.replace(/</g,'').replace(/>/g,'') + "]</li>").attr("name" ,data.notification[bridges]._2.Channel).attr("id" ,data.notification[bridges]._2.Uniqueid).attr("time" ,data.notification[bridges]._2.AccountCode).attr("extrachannel" ,data.notification[bridges]._1.Channel));
+                                active_call = true;
+                        }
+                    }else if (data.notification[bridges]._2.Channel.indexOf('Local/' + $('#extension').html()) > -1){
+                        if (data.notification[bridges]._1.ChannelState == 6){
+                        //console.log(data.notification[bridges]._1.Channel);
+                                $("#active_chan").html($("<li>" + data.notification[bridges]._1.CallerIDName.replace(/</g,'').replace(/>/g,'') + "<br>[" + data.notification[bridges]._1.CallerIDNum.replace(/</g,'').replace(/>/g,'') + "]</li>").attr("name" ,data.notification[bridges]._1.Channel).attr("id" ,data.notification[bridges]._1.Uniqueid).attr("time" ,data.notification[bridges]._1.AccountCode).attr("extrachannel" ,data.notification[bridges]._2.Channel));
+                                active_call = true;
+                        }
+                    }
+                    if (active_call == true){
+                        //console.log('Context_active');
+                            //$('tr').contextMenu('update', menuactive);
+                    }else{
+                        //console.log('Context_not_active');
+                            //$('tr').contextMenu('update', menu);
+                    }
+                    var Sip1=data.notification[bridges]._1.Channel.replace(/SIP\/(.*)\-(.*)$/g, '$1');
+                    var Sip2=data.notification[bridges]._2.Channel.replace(/SIP\/(.*)\-(.*)$/g, '$1');
+                    var ConnectedLineNum2=data.notification[bridges]._1.CallerIDName.replace(/</g,'').replace(/>/g,'') + " [" + data.notification[bridges]._1.CallerIDNum.replace(/</g,'').replace(/>/g,'') + "]";
+                    //var ConnectedLineNum1=data.notification[bridges]._1.ConnectedLineNum.replace(/</g,'').replace(/>/g,'');
+                    var ConnectedLineNum1=data.notification[bridges]._2.CallerIDName.replace(/</g,'').replace(/>/g,'') + " [" + data.notification[bridges]._2.CallerIDNum.replace(/</g,'').replace(/>/g,'') + "]";
+                    //var ConnectedLineNum2=data.notification[bridges]._2.ConnectedLineNum.replace(/</g,'').replace(/>/g,'');
+                    //console.log($(Sip2).html(data.notification[bridges]._1.Channel.ConnectedLineNum));
+                    //console.log($(Sip1).html(data.notification[bridges]._2.Channel.ConnectedLineNum));
+                    //console.log($('tr[name=' + Sip1 + '] .Status').html());
+                    //console.log($(data.notification[bridges]._1.CallerIDNum.replace(/</g,'').replace(/>/g,'')));
+                    //console.log(ConnectedLineNum2);
+                    //console.log(Sip1);
+                    //console.log($(data.notification[bridges]._2.CallerIDNum.replace(/</g,'').replace(/>/g,'')));
+                    $("tr[name=" + Sip1 + "] .Active").html(ConnectedLineNum1);
+                    $("tr[name=" + Sip2 + "] .Active").html(ConnectedLineNum2);
+                    //$("tr[name=" + Sip2 + "] .Active").html($(data.notification[bridges]._2.CallerIDNum.replace(/</g,'').replace(/>/g,'')));
+                        //console.log('timestamp: ' + $("#active_chan").children().eq(0).attr('name'));
+                }else{
+                    //$(".Active").html("");
+                }
+            }
+        } else {
+            $("#topdiv").addClass("loggedoff");
+                        //console.log("not loggedin");
+        }
+    });
+    socket.on('eventUserEvent', function (data) {
+        //console.log(data);
+        if (data.exten > "") {
+            var device = '#' + data.exten;
+            if (data.action == 'pause'){
+                $(device).addClass("Paused");
+                if (data.exten == $("#extension").html()){
+                    $("#topdiv").addClass("paused");
+                }
+            } else if (data.action == 'unpause'){
+                $(device).removeClass("Paused");
+                if (data.exten == $("#extension").html()){
+                    $("#topdiv").removeClass("paused");
+                }
+            } else if (data.action == 'logout'){
+                $(device + ' .Sip').html('')
+                $(device).attr("name" ,'');
+                $(device).addClass("status_4");
+            } else if (data.action == 'login'){
+                $(device + ' .Sip').html(data.sip.replace(/SIP\/(.*)\-(.*)$/g, '$1'));
+                $(device).attr("name" ,data.sip.replace(/SIP\/(.*)\-(.*)$/g, '$1'));
+                $(device).removeClass("status_4");
+            } else {
+                $(device + ' .Sip').html(data.sip.replace(/SIP\/(.*)\-(.*)$/g, '$1'));
+                $(device).attr("name" ,data.sip.replace(/SIP\/(.*)\-(.*)$/g, '$1'));
+                $(device).removeClass("status_4");
+            }
+        }
+    });
+    socket.on('eventMusicOnHoldStop', function (data) {
+        var uniqueID = data.notification.Uniqueid.replace('.', "");
+        //console.log(data.notification);
+        $("#hold_chan").find("#" + uniqueID).html('').attr("name",'').attr("id",'');
+        $("#transfer_chan").find("#" + uniqueID).html('').attr("name",'').attr("id",'');
+    });
+    socket.on('Reload', function () {
+        location.reload();
+    });
+    socket.on('eventMusicOnHoldStart', function (data) {
+        var uniqueID = data.notification.Uniqueid.replace('.', "");
+        //console.log(data.notification);
+        var ext = data.notification.Exten.split('_')[2]
+        var action = data.notification.Exten.split('_')[1]
+        //console.log(ext);
+        if ($('#extension').html() == ext){
+            //$("#hold_chan").append($('<li>'+ data.notification.CallerIDName +' ['+ data.notification.CallerIDNum +']</li>').attr("name" ,data.notification.Channel).attr("id" ,uniqueID));
+            if (action == 'tra'){
+                //$("#transfer_chan li:first").html(data.notification.CallerIDName +' ['+ data.notification.CallerIDNum +']').attr("name" ,data.notification.Channel).attr("id" ,uniqueID).attr("extrachannel" ,data.notification[bridges]._2.Channel);
+                $("#transfer_chan li:first").html(data.notification.CallerIDName.replace(/</g,'').replace(/>/g,'') + "<br>[" + data.notification.CallerIDNum.replace(/</g,'').replace(/>/g,'') + "]").attr("name" ,data.notification.Channel).attr("id" ,uniqueID).attr("time" ,data.notification.AccountCode);
+            }else if (action == 'hold'){
+                //$("#hold_chan li:empty:first").html(data.notification.CallerIDName +' ['+ data.notification.CallerIDNum +']').attr("name" ,data.notification.Channel).attr("id" ,uniqueID).attr("extrachannel" ,data.notification[bridges]._2.Channel);
+                $("#hold_chan li:empty:first").html(data.notification.CallerIDName.replace(/</g,'').replace(/>/g,'') + " [" + data.notification.CallerIDNum.replace(/</g,'').replace(/>/g,'') + "]<span></span>").attr("name" ,data.notification.Channel).attr("id" ,uniqueID).attr("time" ,data.notification.AccountCode);
+            }
+        }
+    });
+    socket.on('Hangup', function (data) {
+        var uniqueID = data.Uniqueid.replace('.', "");
+        var SIP = data.Channel.replace(/SIP\/(.*)\-(.*)$/g, '$1');
+        if (data.Channel.indexOf($('#sipaccount').html()) > -1){
+            //console.log(data);
+            $("#direct").html('<li></li>');
+        }
+        $("#transfer_chan").find("li#" + uniqueID).html('').attr("name",'').attr("id",'');
+        //$("#" + uniqueID).html('').attr("name",'').attr("id",'');
+        $("#queue").find("li#" + uniqueID).remove();
+        $('tr[name=' + SIP + '] .Active').html('');
+    });
+    socket.on('DialBegin', function (data) {
+        if (data.Channel.indexOf($('#sipaccount').html()) > -1){
+            //if (data.DestChannelState == 4){
+            //console.log(data.DestChannel);
+                    $("#direct").html($("<li>" + data.DestCallerIDNum.replace(/</g,'').replace(/>/g,'') + " [" + data.DestCallerIDName.replace(/</g,'').replace(/>/g,'') + "]</li>").attr("name" ,data.DestChannel).attr("extrachannel" ,data.Channel));
+            //}
+        }else if (data.DestChannel.indexOf($('#sipaccount').html()) > -1){
+            //if (data.ChannelState == 4){
+            //console.log(data.Channel);
+                    $("#direct").html($("<li>" + data.CallerIDNum.replace(/</g,'').replace(/>/g,'') + " [" + data.CallerIDName.replace(/</g,'').replace(/>/g,'') + "]</li>").attr("name" ,data.Channel).attr("extrachannel" ,data.DestChannel));
+            //}
+        }else if (data.Channel.indexOf('Local/' + $('#extension').html()) > -1){
+            //if (data.DestChannelState == 4){
+            //console.log(data.DestChannel);
+                    $("#direct").html($("<li>" + data.DestCallerIDNum.replace(/</g,'').replace(/>/g,'') + " [" + data.DestCallerIDName.replace(/</g,'').replace(/>/g,'') + "]</li>").attr("name" ,data.DestChannel).attr("extrachannel" ,data.Channel));
+            //}
+        }else if (data.DestChannel.indexOf('Local/' + $('#extension').html()) > -1){
+            //if (data.ChannelState == 4){
+            //console.log(data.Channel);
+                    $("#direct").html($("<li>" + data.CallerIDNum.replace(/</g,'').replace(/>/g,'') + " [" + data.CallerIDName.replace(/</g,'').replace(/>/g,'') + "]</li>").attr("name" ,data.Channel).attr("extrachannel" ,data.DestChannel));
+            //}
+        }
+    });
+    socket.on('QueueCallerJoin', function (data) {
+        //console.log(data);
+        var uniqueID = data.Uniqueid.replace('.', "");
+        $("#queue_" + data.Queue).append($('<li>'+ data.CallerIDName +' ['+ data.CallerIDNum +']<span></span></li>').attr("name" ,data.Channel).attr("id" ,uniqueID).attr("time" ,data.AccountCode));
+    });
+    socket.on('NewConnectedLine', function (data) {
+        if (data.Channel.indexOf($('#sipaccount').html()) > -1){
+            //console.log(data);
+            var uniqueID = data.Uniqueid.replace('.', "");
+            $("#direct").children().eq(0).html(data.CallerIDNum.replace(/</g,'').replace(/>/g,'') + " [" + data.CallerIDName.replace(/</g,'').replace(/>/g,'') + "]").attr("name" ,data.DestChannel).attr("extrachannel" ,data.Channel);
+            //$("#direct").children().eq(0).html(data.ConnectedLineName +' ['+ data.ConnectedLineNum +']');
+        }
+        var uniqueID = data.Uniqueid.replace('.', "");
+        var SIP = data.Channel.replace(/SIP\/(.*)\-(.*)$/g, '$1');
+        //console.log(SIP);
+        $('tr[name=' + SIP + '] .Active').html(data.ConnectedLineName +' ['+ data.ConnectedLineNum +']');
+        //$("#" + uniqueID).html(data.ConnectedLineName +' ['+ data.ConnectedLineNum +']');
+        //$("#queue_" + data.Queue).find(data.notification.Uniqueid).remove();
+    });
+    socket.on('QueueCallerLeave', function (data) {
+        //console.log(data);
+        var uniqueID = data.Uniqueid.replace('.', "");
+        $("#queue_" + data.Queue).find("li#" + uniqueID).remove();
+        //$("#queue_" + data.Queue).find(data.notification.Uniqueid).remove();
+    });
+    socket.on('extensions', function (data) {
+        //var columns = addAllColumnHeaders(data.extensions);
+        for (var i = 0 ; i < data.extensions.length ; i++) {
+            var myElem = document.getElementById(data.extensions[i]['Exten']);
+            if (myElem === null) {
+            if (data.extensions[i]['Pause'] == 1){
+                if (data.extensions[i]['Exten'] == $("#extension").html()){
+                    $("#topdiv").addClass("paused");
+                }
+                var row$ = $('<tr/>').attr( "id", data.extensions[i]['Exten'] ).attr( "name", data.extensions[i]['Sip'] ).addClass('Paused');
+            }else{
+                var row$ = $('<tr/>').attr( "id", data.extensions[i]['Exten'] ).attr( "name", data.extensions[i]['Sip'] );
+            }
+           // var row$ = $('<tr/>').contextMenu(menudis,{triggerOn:'contextmenu'}).attr( "id", data.extensions[i]['Exten'] ).attr( "name", data.extensions[i]['Sip'] );
+            //var row$ = $('<tr/>').attr( "id", data.extensions[i]['Exten'] ).attr( "name", data.extensions[i]['Sip'] ).contextMenu(menudis,{triggerOn:'contextmenu'});
+            //for (var colIndex = 0 ; colIndex < columns.length ; colIndex++) {
+                //var cellValue = data.extensions[i][columns['Exten']];
+                //if (cellValue == null) { cellValue = ""; }
+        //console.log(data.extensions[i]);
+                row$.append($('<td/>').html(data.extensions[i]['Exten']).addClass('Exten'));
+                row$.append($('<td/>').html(data.extensions[i]['firstname']).addClass('Firstname'));
+                row$.append($('<td/>').html(data.extensions[i]['lastName']).addClass('Lastname'));
+                row$.append($('<td/>').html(data.extensions[i]['Sip']).addClass('Sip'));
+                row$.append($('<td/>').html(data.extensions[i]['Active']).addClass('Active'));
+                row$.append($('<td/>').html(data.extensions[i]['Status']).addClass('Status'));
+                row$.append($('<td/>').html(data.extensions[i]['DND']).addClass('DND'));
+            //}
+            }
+            $("#excelDataTable").append(row$);
+        }
+    });
+
+    socket.on('notification', function (data) {
+        ////console.log(data);
+        var device = '#' + data.notification.Exten;
+        $('td', device).each(function () { $(this).removeClass('status_').addClass('status_'+ data.notification.Status)});
+       // $('time').html('Last Update:' + data.time);
+    });
+    socket.on('dndstate', function (data) {
+        //console.log(data);
+        //$('time').html('Last Update:' + data.time);
+        var device = '#' + data.Exten;
+        if (data.Status == 'NOT_INUSE'){
+            //$(device + ' .DND').html('<img id="DND" src="" />')
+        } else {
+            //$(device + ' .DND').html('<img id="DND" src="voxip/images/icons/16/clock_pause.png" />')
+        }
+    });
+    socket.on('logout', function (data) {
+        var device = '#' + data.Exten;
+        //$(device).contextMenu(menu,{triggerOn:'contextmenu'});
+        $('td', device).each(function () { $(this).removeClass('loggedin').addClass('loggedout')});
+    });
+    socket.on('login', function (data) {
+if (data.Exten == $("#extension").html()){
+        $('#sipaccount').html($(device + " .Sip").html());
+}
+        var device = "#" + data.Exten;
+        //$('#sipaccount').html($(device + " .Sip").html());
+        //console.log(device);
+        $('td', device).each(function () { $(this).removeClass('loggedout').addClass('loggedin')});
+    });
+    socket.on('extensionstate', function (data) {
+        //console.log(data);
+        //$("#extension").html(location.search.split('user=')[1]);
+        //console.log(data.Exten + ' - ' + data.Status);
+        var device = '#' + data.Exten;
+        $('#sipaccount').html($("#" + $("#extension").html() + " .Sip").html());
+        if ($(device + " .Sip").html() == "" ){
+            $(device).addClass("status_4");
+        }else{
+            if(data.Status == 2 ){
+                $(device).removeClass("Paused");
+                //$(device + ' .DND').html('<img id="DND" src="voxip/images/icons/16/clock_pause.png" />')
+                //$(device).contextMenu('update', menuactive);
+            } else if(data.Status == 0 ){
+                if ($("#active_chan").html() != ""){
+                    //$(device).contextMenu('update', menuactive);
+                } else {
+                    //$(device).contextMenu('update', menu);
+                }
+            }else{
+                //$(device).contextMenu('update', menudis);
+            }
+        }
+        //$(device).contextMenu(menu,{triggerOn:'contextmenu'});
+        $('td', device).removeClass(makeRemoveClassHandler(/^status_/));
+        $('td', device).each(function () { $(this).addClass('status_'+ data.Status)});
+    });
+//$('#status_1').contextMenu(menu,{triggerOn:'contextmenu', onOpen:alert('test')});
+$(document).keydown(function(e) {
+        //console.log(e.which);
+    //if (e.ctrlKey) {
+        //console.log(e.which);
+        ////alert($("#queue_hfd").first().attr('name'));
+        ////socket.emit('client_data', {'letter': + e.keyCode +'.Ctrl.' + $("#active_chan").children().eq(0).attr('name') + '.' + $("#extension").html() });
+        //socket.emit('client_data', {'letter': + e.keyCode + '.PickupHold.' + $("#dial").val() + '.' + $("#sipaccount").html() });
+        //e.preventDefault();
+    if (e.which == 32 && e.ctrlKey){
+        if ($("#active_chan").children().length > 0){
+            socket.emit('client_data', {'letter': + e.keyCode + '.Hangup.' + $("#active_chan").children().eq(0).attr('name') });
+        }else{
+            if ($("#direct").children().eq(0).attr('extrachannel').indexOf($('#sipaccount').html()) > -1){
+                socket.emit('client_data', {'letter': + e.keyCode + '.Hangup.' + $("#direct").children().eq(0).attr('extrachannel') });
+            } else {
+                socket.emit('client_data', {'letter': + e.keyCode + '.Hangup.' + $("#direct").children().eq(0).attr('name') });
+            }
+        }
+    }else if (e.which == 120){ // PAUSE F9
+        var request = $.ajax({
+            method: "GET",
+            url: "http://10.106.88.241/admin/apps/queue_pause.php?sip=" + $("#sipaccount").html(),
+            cache: false
+        })
+        request.done(function( paused ) {
+            if (paused=='1'){
+                socket.emit('client_data', {'letter': + e.keyCode + '.Pause.' + $('#sipaccount').html()});
+                $("#topdiv").addClass("paused");
+            }else{
+                socket.emit('client_data', {'letter': + e.keyCode + '.UnPause.' + $('#sipaccount').html()});
+                $("#topdiv").removeClass("paused");
+            }
+        });
+        request.fail(function() {
+            //console.log("error");
+        })
+        request.always(function() {
+            //console.log("complete");
+        });
+    } else if (e.which >= 48 && e.which <= 57 && e.ctrlKey){
+    //}else if (e.which >= 48 && e.which <= 57 && e.ctrlKey){
+        //console.log(e.which);
+        if ($("#dial").is(":focus")){
+        //console.log(e.which);
+        }else{
+        $("#dial").val($("#dial").val() + String.fromCharCode(e.which));
+        }
+        if ($("#transfer_chan").children().length > 0){
+            socket.emit('client_data', {'letter': + e.keyCode + '.Transfer.' + $("#transfer_chan").children().eq(e.which - 49).attr('name') + '.' + $("#active_chan").children().eq(0).attr('name') });
+            $("#hold_chan").children().eq(e.which - 49).html('');
+        } else if ($("#active_chan").children().length > 0){
+            socket.emit('client_data', {'letter': + e.keyCode + '.Transfer.' + $("#hold_chan").children().eq(e.which - 49).attr('name') + '.' + $("#active_chan").children().eq(0).attr('name') });
+            $("#hold_chan").children().eq(e.which - 49).html('');
+        } else {
+            socket.emit('client_data', {'letter': + e.keyCode + '.PickupHold.' + $("#hold_chan").children().eq(e.which - 49).attr('name') + '.' + $("#extension").html() });
+        }
+        e.preventDefault();
+    }else if (e.which >= 112 && e.which <= 115){
+        //console.log(e.which);
+        if ($("#dial").is(":focus")){
+        //console.log(e.which);
+        }else{
+        $("#dial").val($("#dial").val() + String.fromCharCode(e.which));
+        e.preventDefault();
+        }
+        if ($("#active_chan").children().length > 0){
+            socket.emit('client_data', {'letter': + e.keyCode + '.Transfer.' + $("#hold_chan").children().eq(e.which - 112).attr('name') + '.' + $("#active_chan").children().eq(0).attr('name') });
+            $("#hold_chan").children().eq(e.which - 112).html('');
+        } else {
+            socket.emit('client_data', {'letter': + e.keyCode + '.PickupHold.' + $("#hold_chan").children().eq(e.which - 112).attr('name') + '.' + $("#extension").html() });
+        }
+        e.preventDefault();
+    }else if ((e.which >= 96 && e.which <= 105) || (e.which >= 48 && e.which <= 57)){
+        console.log(e.which);
+        if ($("#dial").is(":focus")){
+            //console.log(e.which);
+        }else{
+            if (e.which >= 96 && e.which <= 105){
+                $("#dial").val($("#dial").val() + String.fromCharCode(e.which - 48));
+            }else{
+                $("#dial").val($("#dial").val() + String.fromCharCode(e.which));
+            }
+            //e.preventDefault();
+        }
+        socket.emit('client_data', {'letter': + e.keyCode + '.Keypress' });
+    }else if (e.keyCode == 13){
+        //console.log('active_chan: ' +$("#active_chan").children().length);
+        //console.log('#dial: ' + $("#dial").val().length);
+        if ($("#active_chan").children().length > 0){
+            if ($("#dial").val().length > 0){
+                socket.emit('client_data', {'letter': + e.keyCode + '.AttendedTransfer.' + $("#active_chan").children().eq(0).attr('name') + '.' + $("#extension").html() + '.' + $("#active_chan").children().eq(0).attr('extrachannel') + '.' + $("#dial").val() });
+                $("#dial").val('')
+            }
+        }else if (e.keyCode == 13){
+            if ($("#dial").val().length > 0){
+                socket.emit('client_data', {'letter': + e.keyCode + '.Dial.' + $("#dial").val() + '.' + $("#sipaccount").html() });
+                $("#dial").val('')
+            }
+        }
+        e.preventDefault();
+    }else if (e.keyCode == 8){
+        //console.log(e.which);
+        if ($("#dial").is(":focus")){
+        //console.log(e.which);
+        }else{
+        $("#dial").val($("#dial").val().slice(0,-1));
+        //e.preventDefault();
+        }
+        socket.emit('client_data', {'letter': + e.keyCode + '.Keypress' });
+    }else if (e.which == 37 || e.which == 39 || e.which == 91 || e.which == 82 || e.which == 16 || e.which == 27){
+        e.preventDefault();
+        if (e.which == 37 && $("#transfer_chan li:first").html() != ""){
+        console.log(e.which);
+            if ($("#active_chan").children().length > 0){
+                socket.emit('client_data', {'letter': + e.keyCode + '.Hangup.' + $("#active_chan").children().eq(0).attr('name') });
+            }else{
+                socket.emit('client_data', {'letter': + e.keyCode + '.Hangup.' + $("#direct").children().eq(0).attr('extrachannel') });
+            }
+setTimeout(function(){
+            socket.emit('client_data', {'letter': + e.keyCode + ".PickupHold." +$("#transfer_chan").children().eq(0).attr('name') + "." + $("#extension").html() });
+}, 100);
+        }
+        //console.log(e.which);
+    }else if ($("#transfer_chan li:first").html() != "" && $("#active_chan").children().length > 0){
+        //console.log(e.keyCode);
+            socket.emit('client_data', {'letter': + e.keyCode + '.Transfer.' + $("#transfer_chan").children().eq(0).attr('name') + '.' + $("#active_chan").children().eq(0).attr('name') });
+        //alert($("#queue_hfd").children().eq(0).attr('name'));
+            $("#transfer_chan").html("<li></li>");
+        //socket.emit({'channel': + $("#queue_hfd").children().eq(0).attr('name'), 'letter': + e.keyCode });
+        e.preventDefault();
+    }else if ($("#active_chan").children().length > 0){
+        //console.log(e.keyCode);
+        //alert($("#queue_hfd").children().eq(0).attr('name'));
+        socket.emit('client_data', {'letter': + e.keyCode + ".CallOnHold." +$("#active_chan").children().eq(0).attr('name') + "." + $("#extension").html() });
+        //socket.emit({'channel': + $("#queue_hfd").children().eq(0).attr('name'), 'letter': + e.keyCode });
+        e.preventDefault();
+    }else if ($("#direct li:first").html() != ""){
+        //console.log(e.which);
+        socket.emit('client_data', {'letter': + e.keyCode + ".PickQueueCall." +$("#direct").children().eq(0).attr('name') + "." + $("#extension").html() });
+        e.preventDefault();
+    }else if ($(".queue").children().length > 0){
+        //console.log(e.which);
+        //alert($("#queue_hfd").children().eq(0).attr('name'));
+        socket.emit('client_data', {'letter': + e.keyCode + ".PickQueueCall." +$(".queue").children().eq(0).attr('name') + "." + $("#extension").html() });
+        //socket.emit({'channel': + $("#queue_hfd").children().eq(0).attr('name'), 'letter': + e.keyCode });
+        e.preventDefault();
+    }else{
+        //console.log(e.which);
+        //alert($(".queue").children().length);
+        e.preventDefault();
+    }
+
+    //$('tr').contextMenu(menudis,{triggerOn:'contextmenu'});
+    //$('tr #status_0').contextMenu(menudis,{triggerOn:'contextmenu'});
+});
+$("#cancel_button").click(function (){
+    if ($("#active_chan").children().length > 0){
+        //console.log('hangup');
+        socket.emit('client_data', {letter: '32.Hangup.' + $("#active_chan").children().eq(0).attr('name') });
+    }else{
+        if ($("#direct").children().eq(0).attr('extrachannel').indexOf($('#sipaccount').html()) > -1){
+            socket.emit('client_data', {letter: '32.Hangup.' + $("#direct").children().eq(0).attr('extrachannel') });
+        } else {
+            socket.emit('client_data', {letter: '32.Hangup.' + $("#direct").children().eq(0).attr('name') });
+        }
+    }
+    //socket.emit('client_data', {letter: '13.Dial.' + $("#dial").val() + '.' + $("#sipaccount").html() });
+    //$("#dial").val('')
+});
+
+$("#dial_button").click(function (){
+    socket.emit('client_data', {letter: '13.Dial.' + $("#dial").val() + '.' + $("#sipaccount").html() });
+    $("#dial").val('')
+});
+
+});
+
+function makeRemoveClassHandler(regex) {
+  return function (index, classes) {
+    return classes.split(/\s+/).filter(function (el) {return regex.test(el);}).join(' ');
+  }
+}
+
+    </script>
+    </body>
+</html>
