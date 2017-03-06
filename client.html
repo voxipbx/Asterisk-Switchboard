@@ -338,44 +338,41 @@ display:block-inline;
     background-position: 2px 2px;
     background-repeat: no-repeat;
 }
-		</style>
-            <link rel="stylesheet" href="voxip/jquery.contextMenu.css" type="text/css" media="screen">
-
-	</head>
-	<body>
+</style>
+<link rel="stylesheet" href="voxip/jquery.contextMenu.css" type="text/css" media="screen">
+</head>
+<body>
 <div id="topdiv">
     <div id="extension"></div>
     <div id="sipaccount"></div>
     <div class='queue' id="queue"></div>
     <div id="active_div">
-        <div id="direct"><li></li></div>
-        <div class="active_chan"><div id="active_chan"></div><div id="active_time"></div></div>
-        <div class="transfer_chan"><div id="transfer_chan"><li></li></div><div id="transfer_time"></div></div>
+    <div id="direct"><li></li></div>
+    <div class="active_chan"><div id="active_chan"></div><div id="active_time"></div></div>
+    <div class="transfer_chan"><div id="transfer_chan"><li></li></div><div id="transfer_time"></div></div>
     <div class="buttons">
         <input class="dialer" id=dial pattern="[0-9]{13}" onkeyup="if (/\D/g.test(this.value)) this.value = this.value.replace(/\D/g,'')" type=number></input>
         <div class="button" id="dial_button"></div>
         <div class="button" id="cancel_button"></div>
+    </div>
 </div>
-    </div>
-    <div class="test"></div>
-    <div id="hold_chan">
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-    </div>
-    <time class=time></time>
-    <div id="active_debug">
-    </div>
+<div class="test"></div>
+<div id="hold_chan">
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+</div>
+<time class=time></time>
 
 <table id="excelDataTable" borddiver="0">
 </table>
-    <script src="voxip/jquery-latest.min.js"></script>
-    <script src="voxip/jquery.contextMenu.js"></script>
-    <script src="socket.io/socket.io.js"></script>
-    <script>
-    var socket = io.connect(':8081');
+<script src="voxip/jquery-latest.min.js"></script>
+<script src="voxip/jquery.contextMenu.js"></script>
+<script src="socket.io/socket.io.js"></script>
+<script>
+var socket = io.connect(':8081');
 function epoch2time(time) {
         var time_var = new Date(Math.floor(time*1000));
         var h = time_var.getHours(),
@@ -389,7 +386,6 @@ function epoch2time(time) {
             r += (s > 9 ? s.toString() : "0" + s.toString());
             //console.log(r);
         return (r);
-
 }
 function update_active_time() {
         var timenow = Math.floor(Date.now()) /1000;
@@ -484,34 +480,6 @@ function update_active_time() {
             r += (s > 9 ? s.toString() : "0" + s.toString());
         $("#active_time").html(r);
     }
-
-var request = $.ajax({
-            method: "GET",
-            dataType: 'json',
-            url: "http://10.106.88.241/admin/apps/getactivechannels.php",
-            cache: false,
-            success: function(data) {
-                    $("#active_debug").html('<li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>');
-                for (var i=0;i<data.length;++i)
-                {
-                    //$('#active_debug').html('<li>'+data[i].caller.number+'</li>');
-                //$( "#active_debug li[accountcode='"+data[i].accountcode+"']" ).attr("connected", data[i].name).attr("con_name", data[i].connected.name).attr("con_number", data[i].connected.number);
-var found=0;
-    $( "#active_debug li").each(function(){
-if ($(this).attr('accountcode') == data[i].accountcode){
-found=1;
-$(this).removeClass("SINGLE");
-}
-});
-if (found==0){
-                $("#active_debug li:empty:first").html(data[i].caller.number + " -> [" + data[i].connected.number + "] " + data[i].connected.name).attr("name" ,data[i].name).attr("id" ,data[i].id).attr("accountcode", data[i].accountcode).attr("time" ,data[i].creationtime).click(function (){
-        socket.emit('client_data', {letter: '31.PickupHold.' + $(this).attr("name") + '.' + $("#extension").html() });
-    }).addClass("SINGLE");
-}
-                //#$("[" + data.notification.CallerIDNum.replace(/</g,'').replace(/>/g,'') + "]<span></span>").attr("name" ,data.notification.Channel).attr("id" ,uniqueID).attr("time" ,data.notification.AccountCode);
-                }
-            }
-        });
 }
 $(document).ready(function(e) {
         var socket = io.connect(':8081');
