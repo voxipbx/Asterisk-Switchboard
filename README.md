@@ -4,7 +4,7 @@ Asterisk Switchboard
 This is a Node-js server side asterisk switchboard.
 
 asterisk configuration:
-<script>
+<pre>
 exten => _opXX_X.,1,NoOp(Sipheader)
 
 exten => _opXX_X.,n,SET(SWITCHBOARD_EXTENSION=${EXTEN})
@@ -32,7 +32,7 @@ exten => _opXX_tra_X.,n,Answer()
 exten => _opXX_tra_X.,n,MusicOnHold(default,6000)
 
 exten => _opXX_tra_X.,n,Hangup()
-</script>
+</pre>
 
 Request via web: variables user and queue
 user = extension of user/operator
